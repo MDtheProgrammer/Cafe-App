@@ -12,8 +12,11 @@ public class UserRestImpl implements UserRest{
 
     @Override
     public ResponseEntity<String> signup(Map<String, String> requestMap) {
-        // TODO Auto-generated method stub
-        return null;
+       try{
+
+       }catch(Exception ex){
+        ex.printStackTrace();
+       }
     }
 
 }
