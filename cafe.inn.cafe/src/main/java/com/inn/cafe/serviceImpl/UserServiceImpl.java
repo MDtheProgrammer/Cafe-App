@@ -33,13 +33,14 @@ public class UserServiceImpl implements UserService{
                 if(Objects.isNull(user)){
                     userDAO.save(getUserFromMap(requestMap));
                     return CafeUtils.getResponseEntity("Successfully Registered", HttpStatus.OK);
+                }
+                else{
+                    return CafeUtils.getResponseEntity("Email already exsits", HttpStatus.BAD_REQUEST);
+                }
             }
             else{
-                return CafeUtils.getResponseEntity("Email already exsits", HttpStatus.BAD_REQUEST);
+                return CafeUtils.getResponseEntity(CafeConstants.INVALID_DATA, HttpStatus.BAD_REQUEST);
             }
-        }else{
-            return CafeUtils.getResponseEntity(CafeConstants.INVALID_DATA, HttpStatus.BAD_REQUEST);
-        }
         }
         catch(Exception ex){
             ex.printStackTrace();
