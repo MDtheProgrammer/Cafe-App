@@ -2,6 +2,7 @@ package com.inn.cafe.restImpl;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,13 +15,14 @@ import com.inn.cafe.utils.CafeUtils;
 @RestController
 public class UserRestImpl implements UserRest{
 
-    @Override
-    public ResponseEntity<String> signup(Map<String, String> requestMap) {
-
+    @Autowired
         UserService userService;
 
+    @Override
+    public ResponseEntity<String> signup(Map<String, String> requestMap) {      
+
        try{
-        userService.signUp(requestMap);
+        return userService.signUp(requestMap);
        }catch(Exception ex){
         ex.printStackTrace();
        }
