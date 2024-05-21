@@ -45,7 +45,10 @@ public class User implements Serializable {
 
     @Column(name="status")
     private String status;
-
+    
+    @Column(name="role")
+    private String role;
+    
     public User(){
 
     }
@@ -59,8 +62,6 @@ public class User implements Serializable {
         this.role = role;
     }
 
-    @Column(name="role")
-    private String role;
 
     public Integer getId() {
         return id;

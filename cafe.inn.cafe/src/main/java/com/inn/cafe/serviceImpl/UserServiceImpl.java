@@ -26,12 +26,13 @@ public class UserServiceImpl implements UserService{
     @Override
     public ResponseEntity<String> signUp(Map<String,String> requestMap){
         log.info("Inside signUp {}", requestMap);
+
         try{
-        if(validateSignUpMap(requestMap)){
-            User user = userDAO.findByEmailId(requestMap.get("email"));
-            if(Objects.isNull(user)){
-                userDAO.save(getUserFromMap(requestMap));
-                return CafeUtils.getResponseEntity("Successfully Registered", HttpStatus.OK);
+            if(validateSignUpMap(requestMap)){
+                User user = userDAO.findByEmailId(requestMap.get("email"));
+                if(Objects.isNull(user)){
+                    userDAO.save(getUserFromMap(requestMap));
+                    return CafeUtils.getResponseEntity("Successfully Registered", HttpStatus.OK);
             }
             else{
                 return CafeUtils.getResponseEntity("Email already exsits", HttpStatus.BAD_REQUEST);
