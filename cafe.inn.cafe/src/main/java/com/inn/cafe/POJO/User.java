@@ -1,7 +1,10 @@
 package com.inn.cafe.POJO;
 
+import java.io.Serializable;
+
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,8 +13,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import lombok.Data;
 
-import java.io.Serializable;
 
 
 
@@ -21,7 +24,9 @@ import java.io.Serializable;
 @DynamicUpdate
 @DynamicInsert
 @Table(name="user")
+@Data
 public class User implements Serializable {
+    
   
     private static final long serialVersionUID = 1L;
 
@@ -118,5 +123,6 @@ public class User implements Serializable {
     public void setRole(String role) {
         this.role = role;
     }
+    
     
 }
