@@ -17,6 +17,9 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtUtil {
+
+     private final String SECRET_KEY = "D40837DD97333B7A78320CE1E244D43BB2C006B4D6FDA78E61DB3E0B467C5958";
+
    private String generateToken(String username, String role){
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
@@ -26,7 +29,6 @@ public class JwtUtil {
    private String createToken(Map<String, Object> claims, String subject){
 
     return Jwts.builder()
-    .claims(claims)   
     .subject(subject)
     .issuedAt(new Date(System.currentTimeMillis()))
     .expiration(new Date(System.currentTimeMillis() + 1000*60*60*10))
@@ -48,8 +50,8 @@ public class JwtUtil {
    }
 
    private SecretKey getSignKey(){
-    byte[] key = Decoders.BASE64.decode("D40837DD97333B7A78320CE1E244D43BB2C006B4D6FDA78E61DB3E0B467C5958");
-    return Keys.hmacShaKeyFor(key);
+    byte[] keyBytes = Decoders.BASE64URL.decode(SECRET_KEY);
+    return Keys.hmacShaKeyFor(keyBytes);
    }
 
    private Claims extractAllClaims(String token){
@@ -59,7 +61,6 @@ public class JwtUtil {
    private Boolean isTokenExpired(String token){
         return extractExpiration(token).before(new Date());
    }
-
 
 
    public Boolean validateToken(String token, UserDetails userDetails){
