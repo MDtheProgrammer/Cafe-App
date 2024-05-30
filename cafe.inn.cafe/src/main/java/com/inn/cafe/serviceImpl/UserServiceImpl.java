@@ -1,7 +1,10 @@
 package com.inn.cafe.serviceImpl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +23,7 @@ import com.inn.cafe.constants.CafeConstants;
 import com.inn.cafe.dao.UserDAO;
 import com.inn.cafe.service.UserService;
 import com.inn.cafe.utils.CafeUtils;
+import com.inn.cafe.wrapper.UserWrapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,6 +42,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     JwtUtil jwtUtil;
+    
+    @Autowired
+    JWTAuthenticationFilter jwtAuthenticationFilter;
 
     @Override
     public ResponseEntity<String> signUp(Map<String,String> requestMap){
@@ -107,5 +114,51 @@ public class UserServiceImpl implements UserService{
         }
         return new ResponseEntity<String>("{\"message\":\"" + "Bad Credentials." +"\"}",
                     HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public ResponseEntity<List<UserWrapper>> getAllUser() {
+          try{
+            if(jwtAuthenticationFilter.isAdmin()){
+                return new ResponseEntity<>(userDAO.getAllUser(), HttpStatus.OK);
+            }
+            else{
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
+            }
+          }
+          catch(Exception ex){
+            ex.printStackTrace();
+          }
+          return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> update(Map<String, String> requestMap) {
+        try{
+            if(jwtAuthenticationFilter.isAdmin()){
+               Optional<User> optional = userDAO.findById(Integer.parseInt(requestMap.get("id")));
+               if(!optional.isEmpty()){
+                    userDAO.updateStatus(requestMap.get("status"), Integer.parseInt(requestMap.get("id")));
+
+                    sendMailToAllAdmin(requestMap.get("status"), optional.get().getEmail(), userDAO.getAllAdmin());
+
+                    return CafeUtils.getResponseEntity("User Status Updated Successfully", HttpStatus.OK);
+               }
+               else{{
+                CafeUtils.getResponseEntity("User id doesn't exist", HttpStatus.OK);
+               }}
+            }
+            else{
+                return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private void sendMailToAllAdmin(String string, String email, List<String> allAdmin) {
+       
+        
     }
 }
