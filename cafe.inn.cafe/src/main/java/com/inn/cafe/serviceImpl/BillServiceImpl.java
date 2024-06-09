@@ -13,6 +13,8 @@ import com.inn.cafe.constants.CafeConstants;
 import com.inn.cafe.dao.BillDAO;
 import com.inn.cafe.service.BillService;
 import com.inn.cafe.utils.CafeUtils;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,8 +41,12 @@ public class BillServiceImpl implements BillService{
                     fileName = CafeUtils.getUUID();
                     requestMap.put("uuid", fileName);
                     insertBill(requestMap);
-
                 }
+
+                String data = "Name: " + requestMap.get("name") + "\n" + "Contact Number: "+ "\n" + "Email " + requestMap.get("email") + "\n" + "Payment Method: " + requestMap.get("paymentMethod");
+
+                Document document = new Document();
+                
             }
             return CafeUtils.getResponseEntity("Required data not found", HttpStatus.BAD_REQUEST);
 
